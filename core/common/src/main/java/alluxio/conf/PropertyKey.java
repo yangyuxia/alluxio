@@ -7285,6 +7285,14 @@ public final class PropertyKey implements Comparable<PropertyKey> {
           .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
           .setScope(Scope.CLIENT)
           .build();
+  public static final PropertyKey SECURITY_LOGIN_TOKEN =
+      stringBuilder(Name.SECURITY_LOGIN_TOKEN)
+          .setDescription("When alluxio.security.authentication.type is set to SIMPLE,"
+              + " user application uses this property to indicate the user password requesting "
+              + "Alluxio service. If it is not set explicitly, the 'noPassword' will be used.")
+          .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
+          .setScope(Scope.CLIENT)
+          .build();
   public static final PropertyKey AUTHENTICATION_INACTIVE_CHANNEL_REAUTHENTICATE_PERIOD =
       durationBuilder(Name.AUTHENTICATION_INACTIVE_CHANNEL_REAUTHENTICATE_PERIOD)
           .setDefaultValue("3day")
@@ -9244,6 +9252,7 @@ public final class PropertyKey implements Comparable<PropertyKey> {
     public static final String SECURITY_LOGIN_IMPERSONATION_USERNAME =
         "alluxio.security.login.impersonation.username";
     public static final String SECURITY_LOGIN_USERNAME = "alluxio.security.login.username";
+    public static final String SECURITY_LOGIN_TOKEN = "alluxio.security.login.token";
     public static final String AUTHENTICATION_INACTIVE_CHANNEL_REAUTHENTICATE_PERIOD =
         "alluxio.security.stale.channel.purge.interval";
     public static final String S3_REST_AUTHENTICATION_ENABLED =

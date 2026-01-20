@@ -9,34 +9,32 @@
  * See the NOTICE file distributed with this work for information regarding copyright ownership.
  */
 
-package alluxio.security.authentication.plain;
-
-import alluxio.security.authentication.AuthenticationProvider;
+package alluxio.security.authentication;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.annotation.concurrent.ThreadSafe;
 import javax.security.sasl.AuthenticationException;
 
 /**
- * An authentication provider implementation that allows arbitrary combination of username and
- * password including empty strings.
+ * {@link SimpleTokenAuthenticationProvider} implementation for Custom schemes.
  */
-@ThreadSafe
-public final class SimpleAuthenticationProvider implements AuthenticationProvider {
-  private static final Logger LOG = LoggerFactory.getLogger(SimpleAuthenticationProvider.class);
+public class SimpleTokenAuthenticationProvider implements AuthenticationProvider {
+  private static final Logger LOG = LoggerFactory.getLogger(
+      SimpleTokenAuthenticationProvider.class);
 
   /**
-   * Constructs a new {@link SimpleAuthenticationProvider}.
-   */
-  public SimpleAuthenticationProvider() {}
+   * Constructs a new {@link SimpleTokenAuthenticationProvider}.
+  */
+  public SimpleTokenAuthenticationProvider() {
+  }
 
   @Override
   public void authenticate(String user, String password) throws AuthenticationException {
-    LOG.debug("user=" + user + ",token=" + password);
+    LOG.info("TOKEN: user=" + user + ",password=" + password);
     if (password == null || password.isEmpty()) {
-      throw new AuthenticationException("user password cannot empty!");
+      throw new AuthenticationException("TOKEN: user password must be specified");
     }
   }
 }
+

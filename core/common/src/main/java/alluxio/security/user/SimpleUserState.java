@@ -59,13 +59,21 @@ public class SimpleUserState extends BaseUserState {
     if (mConf.isSet(PropertyKey.SECURITY_LOGIN_USERNAME)) {
       username = mConf.getString(PropertyKey.SECURITY_LOGIN_USERNAME);
     }
+    String password = "defaultPassword";
+    String envPassword = System.getenv(PropertyKey.SECURITY_LOGIN_TOKEN.getName());
+    if (envPassword != null && !envPassword.isEmpty()) {
+      password = envPassword;
+    } else if (mConf.isSet(PropertyKey.SECURITY_LOGIN_TOKEN)) {
+      password = mConf.getString(PropertyKey.SECURITY_LOGIN_TOKEN);
+    }
     try {
       // Use the class loader of User.class to construct the LoginContext. LoginContext uses this
       // class loader to dynamically instantiate login modules. This enables
       // Subject#getPrincipals to use reflection to search for User.class instances.
       LoginContext loginContext =
           SecurityUtils.createLoginContext(AuthType.SIMPLE, mSubject, User.class.getClassLoader(),
-              new LoginModuleConfiguration(), new AppLoginModule.AppCallbackHandler(username));
+              new LoginModuleConfiguration(), new AppLoginModule.AppCallbackHandler(username,
+                  password));
       loginContext.login();
     } catch (LoginException e) {
       throw new UnauthenticatedException("Failed to login: " + e.getMessage(), e);
