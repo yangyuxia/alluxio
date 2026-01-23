@@ -13,9 +13,6 @@ package alluxio.security.authentication.plain;
 
 import alluxio.security.authentication.AuthenticationProvider;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.annotation.concurrent.ThreadSafe;
 import javax.security.sasl.AuthenticationException;
 
@@ -25,7 +22,6 @@ import javax.security.sasl.AuthenticationException;
  */
 @ThreadSafe
 public final class SimpleAuthenticationProvider implements AuthenticationProvider {
-  private static final Logger LOG = LoggerFactory.getLogger(SimpleAuthenticationProvider.class);
 
   /**
    * Constructs a new {@link SimpleAuthenticationProvider}.
