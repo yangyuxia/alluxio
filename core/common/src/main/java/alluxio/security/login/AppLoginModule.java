@@ -21,6 +21,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.callback.NameCallback;
+import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.spi.LoginModule;
@@ -36,6 +37,7 @@ import javax.security.auth.spi.LoginModule;
 public final class AppLoginModule implements LoginModule {
   private Subject mSubject;
   private User mUser;
+  private String mPassword;
   private CallbackHandler mCallbackHandler;
 
   /**
@@ -59,8 +61,9 @@ public final class AppLoginModule implements LoginModule {
    */
   @Override
   public boolean login() throws LoginException {
-    Callback[] callbacks = new Callback[1];
+    Callback[] callbacks = new Callback[2];
     callbacks[0] = new NameCallback("user name: ");
+    callbacks[1] = new PasswordCallback("user password:", true);
     try {
       mCallbackHandler.handle(callbacks);
     } catch (IOException | UnsupportedCallbackException e) {
@@ -70,6 +73,13 @@ public final class AppLoginModule implements LoginModule {
     String userName = ((NameCallback) callbacks[0]).getName();
     if (!userName.isEmpty()) {
       mUser = new User(userName);
+    }
+    char[] password = ((PasswordCallback) callbacks[1]).getPassword();
+    if (password != null && password.length > 0) {
+      mPassword = new String(password);
+    }
+    // authenticate
+    if (mUser != null && mPassword != null) {
       return true;
     }
     return false;
@@ -89,6 +99,7 @@ public final class AppLoginModule implements LoginModule {
   public boolean abort() throws LoginException {
     logout();
     mUser = null;
+    mPassword = null;
     return true;
   }
 
@@ -105,6 +116,11 @@ public final class AppLoginModule implements LoginModule {
    */
   @Override
   public boolean commit() throws LoginException {
+    if (mSubject.getPrivateCredentials().isEmpty()) {
+      if (mPassword != null) {
+        mSubject.getPrivateCredentials().add(mPassword);
+      }
+    }
     // if there is already an Alluxio user, it's done.
     if (!mSubject.getPrincipals(User.class).isEmpty()) {
       return true;
@@ -136,6 +152,9 @@ public final class AppLoginModule implements LoginModule {
     if (mUser != null) {
       mSubject.getPrincipals().remove(mUser);
     }
+    if (mPassword != null && !mPassword.isEmpty()) {
+      mSubject.getPrivateCredentials().remove(mPassword);
+    }
 
     return true;
   }
@@ -146,13 +165,16 @@ public final class AppLoginModule implements LoginModule {
   @NotThreadSafe
   public static final class AppCallbackHandler implements CallbackHandler {
     private final String mUserName;
+    private final String mPassword;
 
     /**
      * Creates a new instance of {@link AppCallbackHandler}.
      * @param username the username
+     * @param password the userPassword
      */
-    public AppCallbackHandler(String username) {
+    public AppCallbackHandler(String username, String password) {
       mUserName = username;
+      mPassword = password;
     }
 
     @Override
@@ -161,6 +183,9 @@ public final class AppLoginModule implements LoginModule {
         if (callback instanceof NameCallback) {
           NameCallback nameCallback = (NameCallback) callback;
           nameCallback.setName(mUserName);
+        } else if (callback instanceof PasswordCallback) {
+          PasswordCallback passCallback = (PasswordCallback) callback;
+          passCallback.setPassword(mPassword == null ? null : mPassword.toCharArray());
         } else {
           Class<?> callbackClass = (callback == null) ? null : callback.getClass();
           throw new UnsupportedCallbackException(callback, callbackClass + " is unsupported.");

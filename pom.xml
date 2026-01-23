@@ -865,6 +865,11 @@
         <version>1.4.20</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.tikv</groupId>
+        <artifactId>tikv-client-java</artifactId>
+        <version>3.3.5</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
