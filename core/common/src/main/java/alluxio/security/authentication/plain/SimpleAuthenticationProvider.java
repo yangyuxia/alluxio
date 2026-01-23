@@ -34,9 +34,6 @@ public final class SimpleAuthenticationProvider implements AuthenticationProvide
 
   @Override
   public void authenticate(String user, String password) throws AuthenticationException {
-    LOG.debug("user=" + user + ",token=" + password);
-    if (password == null || password.isEmpty()) {
-      throw new AuthenticationException("user password cannot empty!");
-    }
+    // no-op authentication
   }
 }

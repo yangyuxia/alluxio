@@ -190,6 +190,10 @@
       <version>${jupiter.version}</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.tikv</groupId>
+      <artifactId>tikv-client-java</artifactId>
+    </dependency>
   </dependencies>
 
   <build>
