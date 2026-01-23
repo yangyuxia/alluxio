@@ -9,7 +9,7 @@
  * See the NOTICE file distributed with this work for information regarding copyright ownership.
  */
 
-package alluxio.security.authentication.plain.custorm;
+package alluxio.security.authentication.plain.custom;
 
 import alluxio.conf.Configuration;
 import alluxio.conf.PropertyKey;
