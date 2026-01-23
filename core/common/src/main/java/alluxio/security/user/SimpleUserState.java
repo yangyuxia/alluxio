@@ -60,7 +60,7 @@ public class SimpleUserState extends BaseUserState {
       username = mConf.getString(PropertyKey.SECURITY_LOGIN_USERNAME);
     }
     String password = "defaultPassword";
-    String envPassword = System.getenv(PropertyKey.SECURITY_LOGIN_TOKEN.getName());
+    String envPassword = System.getenv("ALLUXIO_TOKEN");
     if (envPassword != null && !envPassword.isEmpty()) {
       password = envPassword;
     } else if (mConf.isSet(PropertyKey.SECURITY_LOGIN_TOKEN)) {

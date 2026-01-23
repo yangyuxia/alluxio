@@ -7289,7 +7289,8 @@ public final class PropertyKey implements Comparable<PropertyKey> {
       stringBuilder(Name.SECURITY_LOGIN_TOKEN)
           .setDescription("When alluxio.security.authentication.type is set to SIMPLE,"
               + " user application uses this property to indicate the user password requesting "
-              + "Alluxio service. If it is not set explicitly, the 'noPassword' will be used.")
+              + "Alluxio service. If it is not set explicitly, the 'defaultPassword' will be used.")
+          .setDefaultValue("defaultPassword")
           .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
           .setScope(Scope.CLIENT)
           .build();
@@ -7763,6 +7764,13 @@ public final class PropertyKey implements Comparable<PropertyKey> {
           .setDescription("The default replication number of files under the SDS table after "
                   + "load option.")
           .setScope(Scope.CLIENT)
+          .build();
+  public static final PropertyKey MASTER_METASTORE_INODE_TIKV_CONNECTION =
+      stringBuilder(Name.MASTER_METASTORE_INODE_TIKV_CONNECTION)
+          .setDefaultValue("127.0.0.1:2379")
+          .setDescription("The connection of tikv for backing store.")
+          .setConsistencyCheckLevel(ConsistencyCheckLevel.ENFORCE)
+          .setScope(Scope.MASTER)
           .build();
   public static final PropertyKey HADOOP_SECURITY_AUTHENTICATION =
       stringBuilder(Name.HADOOP_SECURITY_AUTHENTICATION)
@@ -9363,6 +9371,8 @@ public final class PropertyKey implements Comparable<PropertyKey> {
         "alluxio.table.udb.hive.clientpool.MAX";
     public static final String TABLE_LOAD_DEFAULT_REPLICATION =
         "alluxio.table.load.default.replication";
+    public static final String MASTER_METASTORE_INODE_TIKV_CONNECTION =
+        "alluxio.master.metastore.inode.tikv.connection";
 
     public static final String HADOOP_SECURITY_AUTHENTICATION =
         "alluxio.hadoop.security.authentication";
@@ -9536,6 +9546,9 @@ public final class PropertyKey implements Comparable<PropertyKey> {
     RPC_EXECUTOR_FJP_ASYNC("alluxio.%s.rpc.executor.fjp.async",
         "alluxio\\.(\\w+)\\.rpc\\.executor\\.fjp\\.async",
         PropertyType.BOOLEAN),
+    SECURITY_USER_LOGIN_TOKEN("alluxio.security.user.loginToken.%s",
+        "alluxio\\.security\\.user\\.loginToken\\.([a-zA-Z_0-9-\\.@]+)",
+        PropertyType.STRING),
 
     /**
      * @deprecated This template is always deprecated. It is used only for testing.
