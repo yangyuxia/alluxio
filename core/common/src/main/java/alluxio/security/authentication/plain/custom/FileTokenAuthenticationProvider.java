@@ -14,8 +14,8 @@ package alluxio.security.authentication.plain.custom;
 import alluxio.conf.Configuration;
 import alluxio.conf.PropertyKey;
 import alluxio.security.authentication.AuthenticationProvider;
-
 import alluxio.util.Sm4Utils;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
