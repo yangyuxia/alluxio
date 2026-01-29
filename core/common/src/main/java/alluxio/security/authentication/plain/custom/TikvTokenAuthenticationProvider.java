@@ -15,6 +15,7 @@ import alluxio.conf.Configuration;
 import alluxio.conf.PropertyKey;
 import alluxio.security.authentication.AuthenticationProvider;
 
+import alluxio.util.Sm4Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.tikv.common.TiConfiguration;
@@ -54,12 +55,14 @@ public class TikvTokenAuthenticationProvider implements AuthenticationProvider {
 
   private String getUserTokenFromTikv(String username) {
     String hostConf = Configuration.getString(PropertyKey.MASTER_METASTORE_INODE_TIKV_CONNECTION);
+    String secretKey = Configuration.getString(PropertyKey.SECURITY_TOKEN_SECRET_KEY);
+
     TiConfiguration tikvConf = TiConfiguration.createDefault(hostConf);
-    Optional<ByteString> result;
+    Optional<ByteString> token;
     try (TiSession tikvSession = TiSession.create(tikvConf)) {
       try (RawKVClient tikvClient = tikvSession.createRawClient()) {
         PropertyKey userKey = PropertyKey.Template.SECURITY_USER_LOGIN_TOKEN.format(username);
-        result = tikvClient.get(ByteString.copyFromUtf8(userKey.getName()));
+        token = tikvClient.get(ByteString.copyFromUtf8(userKey.getName()));
       } catch (Exception e) {
         throw new RuntimeException(e);
       }
@@ -67,8 +70,8 @@ public class TikvTokenAuthenticationProvider implements AuthenticationProvider {
       throw new RuntimeException(e);
     }
 
-    if (result != null && result.isPresent()) {
-      return result.get().toStringUtf8();
+    if (token != null && token.isPresent()) {
+      return new Sm4Utils(secretKey).decrypt(token.get().toStringUtf8());
     }
     return "defaultPassword";
   }

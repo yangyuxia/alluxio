@@ -870,6 +870,11 @@
         <artifactId>tikv-client-java</artifactId>
         <version>3.3.5</version>
       </dependency>
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-crypto</artifactId>
+        <version>5.8.43</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 

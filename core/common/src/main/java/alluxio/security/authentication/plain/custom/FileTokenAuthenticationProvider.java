@@ -15,6 +15,7 @@ import alluxio.conf.Configuration;
 import alluxio.conf.PropertyKey;
 import alluxio.security.authentication.AuthenticationProvider;
 
+import alluxio.util.Sm4Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,8 +50,9 @@ public class FileTokenAuthenticationProvider implements AuthenticationProvider {
 
   private String getUserTokenFromConf(String username) {
     PropertyKey userKey = PropertyKey.Template.SECURITY_USER_LOGIN_TOKEN.format(username);
+    String secretKey = Configuration.getString(PropertyKey.SECURITY_TOKEN_SECRET_KEY);
     if (Configuration.isSet(userKey)) {
-      return Configuration.getString(userKey);
+      return new Sm4Utils(secretKey).decrypt(Configuration.getString(userKey));
     }
     return "defaultPassword";
   }
