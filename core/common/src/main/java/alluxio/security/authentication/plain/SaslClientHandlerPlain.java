@@ -60,6 +60,8 @@ public class SaslClientHandlerPlain extends AbstractSaslClientHandler {
     if (credentials != null && !credentials.isEmpty()) {
       password = credentials.iterator().next();
     }
+    LOG.debug(String.format("SASL Client Request: init user=%s and token=%s info......", users,
+        password));
 
     // Determine the impersonation user
     String impersonationUser = AuthenticationUtils.getImpersonationUser(subject, conf);

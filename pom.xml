@@ -865,6 +865,21 @@
         <version>1.4.20</version>
         <scope>test</scope>
       </dependency>
+      <dependency>
+        <groupId>org.tikv</groupId>
+        <artifactId>tikv-client-java</artifactId>
+        <version>3.3.5</version>
+      </dependency>
+      <dependency>
+        <groupId>cn.hutool</groupId>
+        <artifactId>hutool-crypto</artifactId>
+        <version>5.8.43</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcpkix-jdk18on</artifactId>
+        <version>1.83</version>
+      </dependency>
     </dependencies>
   </dependencyManagement>
 
