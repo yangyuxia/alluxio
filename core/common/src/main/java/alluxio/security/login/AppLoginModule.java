@@ -116,7 +116,7 @@ public final class AppLoginModule implements LoginModule {
    */
   @Override
   public boolean commit() throws LoginException {
-    if (mSubject.getPrivateCredentials().isEmpty()) {
+    if (mSubject.getPrivateCredentials(String.class).isEmpty()) {
       if (mPassword != null) {
         mSubject.getPrivateCredentials().add(mPassword);
       }
